@@ -1,0 +1,60 @@
+<area id="street" name="Jim's Street">
+	<room id="garden" name="Jim's Garden">
+		<description>Garden beds full of weeds line the fences on either side, down to the path. Oddly enough, a single hardy lavender bush grows near the door.
+You dare not interfere.</description>
+		<item name="Lavender" take="n">
+			<description>It has soft purple flowers and seemingly neverending tolerance for dry weather and neglect from Jim.</description>
+			<item name="Flower" take="y" part="y">
+				<description>The scent refreshes and calms you. lol wat a homo xD</description>
+				<altname>flowers</altname>
+				<stats mana="5" />
+			</item>
+		</item>
+	</room>
+	<room id="outside_jims" name="On the street next to Jim's house">
+		<first_visit>Finally, you feel like you're on an adventure. It's less exciting than you would've thought.</first_visit>
+		<description>Honestly, this is not a particularly interesting bit of street. Nothing seems to happen around here.</description>
+	</room>
+	<!-- kill the player violently here -->
+	<room id="outside_pjotrs" name="On the street next to Pjotr's house">
+		<first_visit>Oh holy shit you're getting attackied son</first_visit>
+		<description>This is the street outside Pjotr's house. Wowie!</description>
+	</room>
+	<room id="outside_bobs" name="On the street next to Bob's house">
+		<description>Literally the most boring street in the world. I would know, I made it.</description>
+	</room>
+	<room id="statue_south" name="On the street south of the statue">
+		<description>The street curves around the statue. You can see little but the trident from here.</description>
+	</room>
+	<room id="statue_west" name="On the street west of the statue">
+		<description>The street curves around the statue. You can see the whole back of the figure from here.</description>
+	</room>
+	<room id="statue_north" name="On the street north of the statue">
+		<description>The street curves around the statue. You can see little but the whip from here.
+The road abruptly ends here.</description>
+		<item name="Sign" take="n">
+			<description>It reads: "Mr Ducky says: Good visitors stay away from the forest and save often!"</description>
+		</item>
+	</room>
+	<room id="statue" name="Statue Park">
+		<description>The town statue of the Emperor stands tall here, proudly displaying its symbolic whip and trident.</description>
+		<item name="Statue of the Emperor" take="n">
+			<first_visit>Some took issue when Emperor blehheheh took over the nation.
+You didn't bother protesting: your life was unaffected (except for having to look at this government-funded erection). You also value your life.</first_visit>
+			<description>The bronze figure of the Emperor stands around 10 metres tall.
+In its left hand it holds a whip, representing the town's command over livestock, and in its right it holds a trident, representing the beauty of the distant ocean.
+Or so you've been told.</description>
+			<altname>statue</altname>
+			<altname>emperor</altname>
+		</item>
+	</room>
+	<exit a="street.garden" b="street.outside_jims" dir="w" />
+	<exit a="street.outside_jims" b="street.outside_pjotrs" dir="s" />
+	<exit a="street.outside_jims" b="street.outside_bobs" dir="n" />
+	<exit a="street.outside_bobs" b="street.statue_south" dir="n" />
+	<exit a="street.statue_south" b="street.statue_west" dir="nw" />
+	<exit a="street.statue_west" b="street.statue_north" dir="ne" />
+	<exit a="street.statue_south" b="street.statue" dir="n" />
+	<exit a="street.statue_west" b="street.statue" dir="e" />
+	<exit a="street.statue_north" b="street.statue" dir="s" />
+</area>

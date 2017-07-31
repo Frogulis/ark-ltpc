@@ -1,0 +1,37 @@
+html {
+    background-color: grey;
+}
+
+#console_wrapper {
+    max-width: 800px;
+    height: 60%;
+    margin: 0 auto;
+}
+
+#console_input_form {
+    max-width: 100%;
+}
+
+#console_input {
+
+    font-family: courier, monospace;
+    background-color: black;
+    color: white;
+    min-width: 100%;
+    margin-top: 10px;
+    padding: 30px;
+    font-size: 1.0em;
+    border: none;
+}
+
+#console_output {
+    clear: left;
+    background-color: black;
+    color: white;
+    font-family: courier, monospace;
+    height: 90%;
+    padding: 30px;
+    overflow: auto;
+    line-height: 30px;
+    font-size: 1.0em;
+}

@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script type="text/javascript" src="console.js"> </script>
+        <script type="text/javascript" src="ark.js"> </script>
+        <link href="console.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div id="console_wrapper">
+            <div id="console_output">
+            
+            </div>
+            <form name="console_input_form" action="javascript:void(0);" onsubmit="game.gameInput();" id="console_input_form">
+                <input type="text" name="console_input" autocomplete="off" id="console_input">
+            </form>
+        </div>
+        <script type="text/javascript">
+            game.gameInit();
+        </script>
+    </body>
+</html>
