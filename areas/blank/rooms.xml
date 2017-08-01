@@ -1,9 +1,0 @@
-<area id="blank" name="Blank">
-	<room id="white" name="Plain white room">
-		<first_visit>Something ain't right here.</first_visit>
-		<description>This room has entirely white walls. The fact that you're seeing this suggests that something has gone wrong.</description>
-		<item name="Block">
-			<description>It reads: Contact the devs, they goofed.</description>
-		</item>
-	</room>
-</area>

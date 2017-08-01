@@ -61,10 +61,10 @@ var game = (function() {
             "Glancing around, you see the familiar faces of Hermes, Aphrodite, Ares, Kronos, Uranos and Poseidon.<br>" +
             "May the gods help you all.<br>" +
             "**********************************<br>");
-            colorS = getColorObject(255, 0, 0);
-            colorC = getColorObject(255, 255, 0);
-            colorM = getColorObject(0, 86, 255);
-            colorP = getColorObject(0, 255, 42);
+            colorS = getColorObject(255, 50, 50);
+            colorC = getColorObject(255, 255, 50);
+            colorM = getColorObject(50, 86, 255);
+            colorP = getColorObject(50, 255, 50);
             this.personArray = [getPersonObject("Gaia",       0,     25,    100,     25),
                                 getPersonObject("Hermes",    25,     50,     25,     50),
                                 getPersonObject("Aphrodite", 75,     25,     25,     25),
@@ -130,6 +130,12 @@ var game = (function() {
             bg = bg.getAverage(getColorObject(Math.floor(colorP.r * tP), Math.floor(colorP.g * tP), Math.floor(colorP.b * tP)));
             this.setBackground(bg.r, bg.g, bg.b);
         },
+        
+        procTemperament: function(t_val) {
+            if (t_val == "s") {
+                
+            }
+        },
 
         procInput: function(t_input) {
             if (t_input[0] == "help") {
@@ -137,28 +143,22 @@ var game = (function() {
             }
             else if (t_input[0] == "s" || t_input[0] == "sanguine") {
                 jhc.outputLine("You express your sanguine temperament.");
-                procTemperament("s");
+                this.procTemperament("s");
             }
             else if (t_input[0] == "c" || t_input[0] == "choleric") {
                 jhc.outputLine("You express your choleric temperament.");
-                procTemperament("c");
+                this.procTemperament("c");
             }
             else if (t_input[0] == "m" || t_input[0] == "melancholic") {
                 jhc.outputLine("You express your melancholic temperament.");
-                procTemperament("m");
+                this.procTemperament("m");
             }
             else if (t_input[0] == "p" || t_input[0] == "phlegmatic") {
                 jhc.outputLine("You express your phlegmatic temperament.");
-                procTemperament("p");
+                this.procTemperament("p");
             }
             else {
                 jhc.outputLine("I don't understand. Try again.");
-            }
-        },
-        
-        procTemperament: function(t_val) {
-            if (t_num == "s") {
-                
             }
         }
     };
