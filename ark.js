@@ -1,6 +1,6 @@
 var game = (function() {
 
-    var game_name = "workinprogessgame";
+    var game_name = "Temper";
     var game_version = "0.1";
     
     var colorS, colorC, colorM, colorP;
@@ -56,6 +56,10 @@ var game = (function() {
             jhc.clearInput();
             jhc.clearOutput();
             jhc.outputLine(game_name + "<br>A long-term journey through space.<br>" +
+            "**********************************<br>" + 
+            "You take your place at the table. Your crewmates are already seated.<br>" +
+            "Glancing around, you see the familiar faces of Hermes, Aphrodite, Ares, Kronos, Uranos and Poseidon.<br>" +
+            "May the gods help you all.<br>" +
             "**********************************<br>");
             colorS = getColorObject(255, 0, 0);
             colorC = getColorObject(255, 255, 0);
@@ -79,7 +83,7 @@ var game = (function() {
             }
             jhc.outputLine(" > " + input_line);
             
-            this.gameDummyFunction(input_line.toLowerCase().split(" "));
+            this.procInput(input_line.toLowerCase().split(" "));
             this.genBackground();
         },
         
@@ -127,26 +131,34 @@ var game = (function() {
             this.setBackground(bg.r, bg.g, bg.b);
         },
 
-        gameDummyFunction: function(t_input) {
-            if (t_input[0] == "go" || t_input[0] == "g") {
-                if (t_input[1] == "n" || t_input[1] == "north") {
-                    jhc.outputLine("Going north.");
-                }
-                else if (t_input[1] == "e" || t_input[1] == "east") {
-                    jhc.outputLine("Going east.");
-                }
-                else if (t_input[1] == "s" || t_input[1] == "south") {
-                    jhc.outputLine("Going south.");
-                }
-                else if (t_input[1] == "w" || t_input[1] == "west") {
-                    jhc.outputLine("Going west.");
-                }
-                else {
-                    jhc.outputLine("I don't know that way.");
-                }
+        procInput: function(t_input) {
+            if (t_input[0] == "help") {
+                jhc.outputLine("You may express either (S)anguine, (C)holeric, (M)elancholic or (P)hlegmatic temperament.");
+            }
+            else if (t_input[0] == "s" || t_input[0] == "sanguine") {
+                jhc.outputLine("You express your sanguine temperament.");
+                procTemperament("s");
+            }
+            else if (t_input[0] == "c" || t_input[0] == "choleric") {
+                jhc.outputLine("You express your choleric temperament.");
+                procTemperament("c");
+            }
+            else if (t_input[0] == "m" || t_input[0] == "melancholic") {
+                jhc.outputLine("You express your melancholic temperament.");
+                procTemperament("m");
+            }
+            else if (t_input[0] == "p" || t_input[0] == "phlegmatic") {
+                jhc.outputLine("You express your phlegmatic temperament.");
+                procTemperament("p");
             }
             else {
-                jhc.outputLine("Invalid command.");
+                jhc.outputLine("I don't understand. Try again.");
+            }
+        },
+        
+        procTemperament: function(t_val) {
+            if (t_num == "s") {
+                
             }
         }
     };
