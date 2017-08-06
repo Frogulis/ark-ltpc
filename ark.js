@@ -7,7 +7,7 @@ var game = (function() {
     var personArray;
     
     function getColorObject(myR, myG, myB) {
-        var avgfunc = function(other) {
+        var avgFunc = function(other) { //define function once
             var temp = getColorObject(other.r, other.g, other.b);
             temp.r = Math.floor((this.r + temp.r) / 2);
             temp.g = Math.floor((this.g + temp.g) / 2);
@@ -17,14 +17,14 @@ var game = (function() {
         if (myR > 255 || myG > 255 || myB > 255 ||
             myR < 0 || myG < 0 || myB < 0) {
             return {
-                getAverage: avgfunc,
+                getAverage: avgFunc,
                 r: 255,
                 g: 255,
                 b: 255
             };
         }
         return {
-            getAverage: avgfunc,
+            getAverage: avgFunc,
             r: myR,
             g: myG,
             b: myB
@@ -32,25 +32,48 @@ var game = (function() {
     }
     
     function getPersonObject(myName, myS, myC, myM, myP) {
+        var humourToIntFunc = function(val) {
+            if (val == "s") return 0;
+            else if (val == "c") return 1;
+            else if (val == "m") return 2;
+            else if (val == "p") return 3;
+            return 0;
+        }
+        var addHumourFunc = function(humour, amount)
+        {
+            console.log("Adding " + amount + " to " + humour);
+            var humourInt = this.humourToInt(humour);
+            
+            if (this.humours[humourInt] + amount > 150 || this.humours[humourInt] + amount < 0 || amount < 0) {
+                return; //fix this
+            }
+            this.humours[humourInt] += amount;
+            for (i = (humourInt + 1) % 4; amount > 0; i = (i + 1) % 4) {
+                if (i == humourInt) continue; //we dont subtract from the one we're adding to
+                if (this.humours[i] > 0) {
+                    this.humours[i]--;
+                    amount--;
+                }
+            }
+        };
+        
         if (myS < 0 || myC < 0 || myM < 0 || myP < 0) {
             return {
+                humourToInt: humourToIntFunc,
+                addHumour: addHumourFunc,
                 name: myName,
-                s: 38,
-                c: 38,
-                m: 36,
-                p: 36
+                humours: [38, 38, 37, 37]
             };
         }
         return {
+            humourToInt: humourToIntFunc,
+            addHumour: addHumourFunc,
             name: myName,
-            s: myS,
-            c: myC,
-            m: myM,
-            p: myP
+            humours: [myS, myC, myM, myP]
         };
     }
     
-    return {
+    return { //start of "ark" module functions
         
         gameInit: function() {
             jhc.clearInput();
@@ -61,14 +84,14 @@ var game = (function() {
             "Glancing around, you see the familiar faces of Hermes, Aphrodite, Ares, Kronos, Uranos and Poseidon.<br>" +
             "May the gods help you all.<br>" +
             "**********************************<br>");
-            colorS = getColorObject(255, 50, 50);
-            colorC = getColorObject(255, 255, 50);
-            colorM = getColorObject(50, 86, 255);
-            colorP = getColorObject(50, 255, 50);
+            colorS = getColorObject(255, 0, 0);
+            colorC = getColorObject(255, 255, 0);
+            colorM = getColorObject(0, 0, 255);
+            colorP = getColorObject(0, 255, 70);
             this.personArray = [getPersonObject("Gaia",       0,     25,    100,     25),
                                 getPersonObject("Hermes",    25,     50,     25,     50),
                                 getPersonObject("Aphrodite", 75,     25,     25,     25),
-                                getPersonObject("Ares",       0,    125,     25,      0),
+                                getPersonObject("Ares",      25,    100,     25,      0),
                                 getPersonObject("Kronos",    25,     75,     25,     25),
                                 getPersonObject("Uranos",   100,     25,      0,     25),
                                 getPersonObject("Poseidon",  25,      0,     25,    100)];
@@ -106,40 +129,91 @@ var game = (function() {
             document.getElementsByTagName("html")[0].style.backgroundColor = stringgen(r, g, b);
         },
         
+        getAverageHumours: function() {
+            var s = 0;
+            var c = 0;
+            var m = 0;
+            var p = 0;
+            for (i = 0; i < this.personArray.length; i++) {
+                s += this.personArray[i].humours[0];
+                c += this.personArray[i].humours[1];
+                m += this.personArray[i].humours[2];
+                p += this.personArray[i].humours[3];
+            }
+            s /= this.personArray.length;
+            c /= this.personArray.length;
+            m /= this.personArray.length;
+            p /= this.personArray.length;
+            return [s, c, m, p];
+        },
+        
         genBackground: function() {
             //get average of humours then fraction of 150
-            var tS = 0;
-            var tC = 0;
-            var tM = 0;
-            var tP = 0;
-            for (i = 0; i < this.personArray.length; i++) {
-                tS += this.personArray[i].s;
-                tC += this.personArray[i].c;
-                tM += this.personArray[i].m;
-                tP += this.personArray[i].p;
-            }
-            tS = (tS / 7) / 150;
-            tC = (tC / 7) / 150;
-            tM = (tM / 7) / 150;
-            tP = (tP / 7) / 150;
-            //now we average all the colours
-            var bg = getColorObject(255, 255, 255);
-            bg = bg.getAverage(getColorObject(Math.floor(colorS.r * tS), Math.floor(colorS.g * tS), Math.floor(colorS.b * tS)));
-            bg = bg.getAverage(getColorObject(Math.floor(colorC.r * tC), Math.floor(colorC.g * tC), Math.floor(colorC.b * tC)));
-            bg = bg.getAverage(getColorObject(Math.floor(colorM.r * tM), Math.floor(colorM.g * tM), Math.floor(colorM.b * tM)));
-            bg = bg.getAverage(getColorObject(Math.floor(colorP.r * tP), Math.floor(colorP.g * tP), Math.floor(colorP.b * tP)));
-            this.setBackground(bg.r, bg.g, bg.b);
+            var humours = this.getAverageHumours();
+            humours[0] /= 150;
+            humours[1] /= 150;
+            humours[2] /= 150;
+            humours[3] /= 150;
+            //now we average all the colours and blend with grey for nice pastel tones
+            var bg = getColorObject(127, 127, 127);
+            bg = bg.getAverage(getColorObject(colorS.r * humours[0], colorS.g * humours[0], colorS.b * humours[0]));
+            bg = bg.getAverage(getColorObject(colorC.r * humours[1], colorC.g * humours[1], colorC.b * humours[1]));
+            bg = bg.getAverage(getColorObject(colorM.r * humours[2], colorM.g * humours[2], colorM.b * humours[2]));
+            bg = bg.getAverage(getColorObject(colorP.r * humours[3], colorP.g * humours[3], colorP.b * humours[3]));
+            bg = bg.getAverage(getColorObject(150, 150, 150));
+            this.setBackground(Math.floor(bg.r), Math.floor(bg.g), Math.floor(bg.b));
         },
         
         procTemperament: function(t_val) {
+            this.personArray[0].addHumour(t_val, 10);
+            //if the updated humour goes over 127, everyone starts to feel it
+            var averageHumours = this.getAverageHumours();
+            if (averageHumours[this.personArray[0].humourToInt(t_val)] > 75) { //fuck this is ugly lol
+                for (i = 1; i < this.personArray.length; i++) {
+                    this.personArray[i].addHumour(t_val, 5);
+                }
+            }
+            //specific character interactions below
             if (t_val == "s") {
+                for (i = 0; i < this.personArray.length; i++) {
+                    if (i != 3) {
+                        this.personArray[i].addHumour(t_val, 5);
+                    }
+                }
                 
+                if (this.personArray[5].humours[3] > 120) {
+                    jhc.outputLine("Uranos meets your gaze.");
+                }
+            }
+            else if (t_val == "c") {
+                this.personArray[3].addHumour(t_val, 10);
+                if (this.personArray[3].humours[1] > 125) {
+                    jhc.outputLine("Ares looks murderous.");
+                }
+            }
+            else if (t_val == "m") {
+            
+            }
+            else if (t_val == "p") {
+                this.personArray[6].addHumour(t_val, 10);
+                if (this.personArray[6].humours[3] > 110) {
+                    jhc.outputLine("Poseidon's patience seems never-ending.");
+                }
+                if (this.personArray[6].humours[3] > 135) {
+                    jhc.outputLine("Is Poseidon even paying attention?");
+                }
             }
         },
 
         procInput: function(t_input) {
             if (t_input[0] == "help") {
                 jhc.outputLine("You may express either (S)anguine, (C)holeric, (M)elancholic or (P)hlegmatic temperament.");
+            }
+            else if (t_input[0] == "quit" || t_input[0] == "exit") {
+                jhc.outputLine("Just close the browser tab!");
+            }
+            else if (t_input[0] == "reset") {
+                this.gameInit();
             }
             else if (t_input[0] == "s" || t_input[0] == "sanguine") {
                 jhc.outputLine("You express your sanguine temperament.");
