@@ -5,6 +5,7 @@ var game = (function() {
     
     var colorS, colorC, colorM, colorP;
     var personArray;
+    var missingArray = [];
     var eventMap;
     
     function getEventRecord(myCount) {
@@ -129,6 +130,8 @@ var game = (function() {
                                 getPersonObject("Kronos",    25,     75,     25,     25),
                                 getPersonObject("Uranos",   100,     25,      0,     25),
                                 getPersonObject("Poseidon",  25,      0,     25,    100)];
+            this.missingArray = [getPersonObject("David",     0,      0,      0,      0),
+                                 getPersonObject("Jamie",   255,    255,    255,    255)];
             this.genBackground();
         },
 
@@ -142,6 +145,43 @@ var game = (function() {
             
             this.procInput(input_line.toLowerCase().split(" "));
             this.genBackground();
+        },
+        
+        roomDescription: function() {
+            var desc = "A utilitarian room containing little but the smooth table at which you're seated.\
+                        A set of dice and a cup have been placed at the centre of the table.\
+                        Looking around, you see ";
+            //compile lists of present and missing people
+            var present_names = "";
+            for (var i = 1; i < this.personArray.length - 1; i++) {
+                present_names = present_names + this.personArray[i].name;
+                if (this.personArray.length > 2) {
+                    present_names = present_names + ", "; //these are so that the commas are correct
+                }
+                else {
+                    present_names = present_names + " "; //as above
+                }
+            }
+            present_names = present_names + "and " + this.personArray[this.personArray.length - 1].name + ". ";
+            desc = desc + present_names;
+            if (this.missingArray.length > 1) {
+                var missing_names = "";
+                for (var i = 0; i < this.missingArray.length - 1; i++) {
+                    missing_names = missing_names + this.missingArray[i].name;
+                    if (this.missingArray.length > 2) {
+                        missing_names = missing_names + ", ";
+                    }
+                    else {
+                        missing_names = missing_names + " ";
+                    }
+                }
+                missing_names = missing_names + "and " + this.missingArray[this.missingArray.length - 1].name + " ";
+                desc = desc + missing_names + "are conspicuously absent.";
+            }
+            else if (this.missingArray.length == 1) {
+                desc = desc + this.missingArray[0].name + " is conspicuously absent.";
+            }
+            return desc;
         },
         
         createColor: function(myr, myg, myb) {
@@ -262,7 +302,7 @@ var game = (function() {
 
         procInput: function(t_input) {
             if (t_input[0] == "help") {
-                jhc.outputLine("You may express either (S)anguine, (C)holeric, (M)elancholic or (P)hlegmatic temperament.");
+                jhc.outputLine("You may express either (S)anguine, (C)holeric, (M)elancholic or (P)hlegmatic temperament. You may also (L)ook.");
             }
             else if (t_input[0] == "quit" || t_input[0] == "exit") {
                 jhc.outputLine("Just close the browser tab!");
@@ -285,6 +325,10 @@ var game = (function() {
             else if (t_input[0] == "p" || t_input[0] == "phlegmatic") {
                 jhc.outputLine("You express your phlegmatic temperament.");
                 this.procTemperament("p");
+            }
+            else if (t_input[0] == "l" || t_input[0] == "look") {
+                jhc.outputLine(this.roomDescription());
+                                
             }
             else {
                 jhc.outputLine("I don't understand. Try again.");
