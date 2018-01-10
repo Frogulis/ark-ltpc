@@ -1,5 +1,12 @@
 html {
+    font-family: courier, monospace;
     background-color: grey;
+    color: white;
+}
+
+a{
+    color: white;
+    text-decoration: none;
 }
 
 #console_wrapper {
