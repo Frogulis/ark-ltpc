@@ -14,10 +14,15 @@ var game = (function() {
             if (options.is_waiter === undefined) options.is_waiter = false;
             if (options.wait_time === undefined) options.wait_time = 1;
             if (options.starting_count === undefined) options.starting_count = 0;
+            if (options.run_once === undefined) options.run_once = false;
             var advanceFunc = function() { //counts down and returns true + resets when cur == 0
+                if (this.run_once && this.has_run) {
+                    return false;
+                }
                 if (this.waiting()) {
                     return false;
                 }
+                if (!this.has_run) this.has_run = true;
                 if (this.cur == 0) {
                     this.cur = this.count;
                     if (this.is_waiter) {
@@ -99,7 +104,9 @@ var game = (function() {
                 is_waiter: options.is_waiter,
                 wait_cur: options.wait_time,
                 wait_max: options.wait_time,
-                waiting_status: false
+                waiting_status: false,
+                run_once: options.run_once,
+                has_run: false                
             }
         },
     

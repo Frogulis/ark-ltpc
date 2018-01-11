@@ -2,7 +2,7 @@ game.initEvents = function() {
     this.eventMap = {
         //simple mood expressions
         "uranosCoolLvl1": this.getEventRecord(10),
-        "aresMadLvl1": this.getEventRecord(5),
+        "aresMadLvl1": this.getEventRecord(5, {run_once: true}),
         "poseidonPatientLvl1": this.getEventRecord(4),
         "poseidonPatientLvl2": this.getEventRecord(4),
         //ares storyline
