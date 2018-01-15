@@ -2,11 +2,14 @@ game.initEvents = function() {
     this.eventMap = {
         //simple mood expressions
         "uranosCoolLvl1": this.getEventRecord(10),
-        "aresMadLvl1": this.getEventRecord(5, {run_once: true}),
+        "aresMadLvl1": this.getEventRecord(5),
         "poseidonPatientLvl1": this.getEventRecord(4),
         "poseidonPatientLvl2": this.getEventRecord(4),
         //ares storyline
-        "aresStormOut": this.getEventRecord(4, {is_waiter: true, wait_time: 10, starting_count: 4})
+        "aresStormOut": this.getEventRecord(4, {is_waiter: true, wait_time: 10, starting_count: 4}),
+        "aresAphroditeLoveLvl1": this.getEventRecord(1, {run_once: true}),
+        "aresAphroditeLoveLvl2": this.getEventRecord(3, {run_once: true, starting_count: 3}),
+        "aresAphroditeLoveLvl3": this.getEventRecord(3, {is_waiter: true, wait_time: 5, starting_count: 3, run_once: true}) //leave room together
     }
 }
 

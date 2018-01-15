@@ -161,6 +161,22 @@ var game = (function() {
                 }
             };
             
+            var subHumourFunc = function(humour, amount)
+            {
+                var humourInt = this.humourToInt(humour);
+                if (this.humours[humourInt] - amount < 0 || amount < 0) {
+                    return;
+                }
+                this.humours[humourInt] -= amount;
+                for (i = (humourInt + 1) % 4; amount > 0; i = (i + 1) % 4) {
+                    if (i == humourInt) continue;
+                    if (this.humours[i] > 0) {
+                        this.humours[i]++;
+                        amount++;
+                    }
+                }
+            };
+            
             if (myS < 0 || myC < 0 || myM < 0 || myP < 0) {
                 return {
                     humourToInt: humourToIntFunc,
@@ -204,8 +220,15 @@ var game = (function() {
         
         initEvents: 0,
 
-        gameInput: function() {
-            var input_line = jhc.getInputLine();
+        gameInput: function(text) {
+            var input_line;
+            if (text === undefined) {
+                jhc.outputLine("!!!");
+                input_line = jhc.getInputLine();
+            }
+            else {
+                input_line = text;
+            }
             jhc.clearInput();
             if (!jhc.isValidInput(input_line)) {
                 return;
@@ -214,6 +237,14 @@ var game = (function() {
             
             this.procInput(input_line.toLowerCase().split(" "));
             this.genBackground();
+        },
+        
+        runTest: function(text) {
+            var cmds = text.split(" ");
+            jhc.outputLine("!> testing line: " + text);
+            for (var i = 0; i < cmds.length; i++) {
+                this.gameInput(cmds[i]);
+            }
         },
         
         roomDescription: function() {
