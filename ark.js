@@ -7,6 +7,7 @@ var game = (function() {
     var personArray;
     var missingArray = [];
     var eventMap;
+    var turnCounter;
     
     return { //start of "ark" module functions
         getEventRecord: function(myCount, options) {
@@ -172,7 +173,7 @@ var game = (function() {
                     if (i == humourInt) continue;
                     if (this.humours[i] > 0) {
                         this.humours[i]++;
-                        amount++;
+                        amount--;
                     }
                 }
             };
@@ -188,6 +189,7 @@ var game = (function() {
             return {
                 humourToInt: humourToIntFunc,
                 addHumour: addHumourFunc,
+                subHumour: subHumourFunc,
                 name: myName,
                 humours: [myS, myC, myM, myP],
                 present: true
@@ -207,13 +209,14 @@ var game = (function() {
             colorC = this.getColorObject(127, 127, 0);
             colorM = this.getColorObject(0, 0, 255);
             colorP = this.getColorObject(0, 255, 0);
-            this.personArray = [this.getPersonObject("Gaia",       0,     25,    100,     25),
+            this.personArray = [this.getPersonObject("Gaia",      50,     25,     50,     25),
                                 this.getPersonObject("Hermes",    25,     50,     25,     50),
-                                this.getPersonObject("Aphrodite", 1,     25,     25,     25),
+                                this.getPersonObject("Aphrodite",100,      0,     25,     25),
                                 this.getPersonObject("Ares",      25,    100,     25,      0),
                                 this.getPersonObject("Kronos",    25,     75,     25,     25),
                                 this.getPersonObject("Uranos",   100,     25,      0,     25),
                                 this.getPersonObject("Poseidon",  25,      0,     25,    100)];
+            this.turnCounter = 0;
             this.initEvents();
             this.genBackground();
         },
@@ -223,7 +226,6 @@ var game = (function() {
         gameInput: function(text) {
             var input_line;
             if (text === undefined) {
-                jhc.outputLine("!!!");
                 input_line = jhc.getInputLine();
             }
             else {
@@ -325,6 +327,18 @@ var game = (function() {
             m /= this.personArray.length;
             p /= this.personArray.length;
             return [s, c, m, p];
+        },
+        
+        addUniformHumours: function(t_val, amount) {
+            for (var i = 0; i < this.personArray.length; i++) {
+                this.personArray[i].addHumour(t_val, amount);
+            }
+        },
+        
+        subUniformHumours: function(t_val, amount) {
+            for (var i = 0; i < this.personArray.length; i++) {
+                this.personArray[i].subHumour(t_val, amount);
+            }
         },
         
         /*genBackground: function() {
