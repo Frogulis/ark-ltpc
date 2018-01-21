@@ -27,11 +27,7 @@ game.procTemperament = function(t_val) {
         }
     }
     
-    //people returning to the table
-    if (this.eventMap["aresStormOut"].waitAdvance()) { //this will trigger when the wait ends and no other time
-        this.personArray[3].present = true;
-        jhc.outputLine("Ares returns to the table with a sheepish look.");
-    }
+      
     
     //general stuff
     if (this.eventMap["kronosTick"].advance() && this.personArray[4].present) {
@@ -45,7 +41,6 @@ game.procTemperament = function(t_val) {
             if (i1 == i2) i2 = (i2 + 1) % this.personArray.length;
             var winner_number = i1 > i2 ? i1 : i2;
             var loser_number = i1 > i2 ? i2 : i1;
-            console.log("!" + i1 + i2 + this.turnCounter);
             jhc.outputLine(this.personArray[i1].name + 
                             " and " + this.personArray[i2].name +
                             " start playing dice. " +
@@ -60,49 +55,108 @@ game.procTemperament = function(t_val) {
     
     //specific character interactions below
     if (t_val == "s") {    
-        if (this.personArray[5].present) {
-            if (this.personArray[5].humours[3] > 120) {
-                if (this.eventMap["uranosCoolLvl1"].advance()) {
-                    jhc.outputLine("Uranos meets your gaze.");
-                }
-            }
-        }
+        this.procS;
     }
     else if (t_val == "c") {
-        if (this.personArray[3].present) {
-            this.personArray[3].addHumour(t_val, 10);
-            if (this.personArray[3].humours[1] > 110) {
-                if (this.eventMap["aresMadLvl1"].advance()) {
-                    jhc.outputLine("Ares looks murderous.");
-                    this.eventMap["aresStormOut"].step();
-                }
-            }
-            if (this.personArray[3].humours[1] > 120 && //ares high chol
-                     this.personArray[2].humours[0] < 30 && //aphro low sang
-                     this.eventMap["aresStormOut"].ready()) {
-                this.personArray[3].present = false;
-                jhc.outputLine("Ares stands up, his hands balled into tight fists\
-                                and a look of rage and frustration on his face. He storms out\
-                                loudly.");
-                this.eventMap["aresStormOut"].advance();
-            }
-        }
-        
+        this.procC;
     }
     else if (t_val == "m") {
-    
+        this.procM;
     }
     else if (t_val == "p") {
-        if (this.personArray[6].present) {
-            this.personArray[6].addHumour(t_val, 10);
-            if (this.personArray[6].humours[3] > 110 && this.eventMap["poseidonPatientLvl1"].advance()) {
-                jhc.outputLine("Poseidon's patience seems never-ending.");
-                this.eventMap["poseidonPatientLvl2"].step();
+        this.procP;
+    }
+    console.log("Turn " + this.turnCounter);
+    for (var i = 0; i < this.personArray.length; i++) {
+        var print_hmrs = "";
+        for (var j = 0; j < 4; j++) {
+            print_hmrs += (this.personArray[i].humours[j] + " ");
+        }
+        console.log(this.personArray[i].name + " " + print_hmrs);
+    }
+}
+
+game.addNotPresentArrayToPlayer = function (player) {
+    var nparray = [];
+    for (var i = 0; i < this.personArray.length; i++) {
+        if (this.personArray[i].name != player.name && !this.personArray[i].present) {
+            nparray += i;
+        }
+    }
+    player.nparray = nparray;
+}
+
+game.procReturns = function() {
+    
+    function aresLeavesForever() {//if ares returns to the table and somebody is newly missing, he leaves forever
+        var newly_missing = 0;
+        for (var i = 0; i < this.personArray.length; i++) {
+            if (i != 3 && !this.personArray[i].present) {
+                if (i in this.personArray[3].left_array) {
+                    continue;
+                }
+                newly_missing++;
             }
-            else if (this.personArray[6].humours[3] > 135 && this.eventMap["poseidonPatientLvl2"].ready()) {
-                jhc.outputLine("Is Poseidon even paying attention?");
-                this.eventMap["poseidonPatientLvl2"].advance(); //don't want it repeating
+        }
+        if (newly_missing == 0) return; //nobody new has left
+        jhc.outputLine("Ares looks around and notices the missing " + newly_missing > 1 ? "seats" : "seat" + 
+                       ". He walks away.");
+        ares.present = false;
+    }
+    
+    if (this.eventMap["aresStormOut"].waitAdvance()) { //this will trigger when the wait ends and no other time
+        this.personArray[3].present = true;
+        jhc.outputLine("Ares returns to the table with a sheepish look.");
+        aresLeavesForever();
+    }
+    
+}
+
+game.procS = function() {
+    if (this.personArray[5].present) {
+        if (this.personArray[5].humours[3] > 120) {
+            if (this.eventMap["uranosCoolLvl1"].advance()) {
+                jhc.outputLine("Uranos meets your gaze.");
             }
+        }
+    }
+}
+
+game.procC = function() {
+    if (this.personArray[3].present) {
+        this.personArray[3].addHumour(t_val, 10);
+        if (this.personArray[3].humours[1] > 110) {
+            if (this.eventMap["aresMadLvl1"].advance()) {
+                jhc.outputLine("Ares looks murderous.");
+                this.eventMap["aresStormOut"].step();
+            }
+        }
+        if (this.personArray[3].humours[1] > 120 && //ares high chol
+                 this.personArray[2].humours[0] < 30 && //aphro low sang
+                 this.eventMap["aresStormOut"].ready()) {
+            this.personArray[3].present = false;
+            jhc.outputLine("Ares stands up, his hands balled into tight fists\
+                            and a look of rage and frustration on his face. He storms out\
+                            loudly.");
+            this.eventMap["aresStormOut"].advance();
+        }
+    }
+}
+
+game.procM = function() {
+    
+}
+
+game.procP = function() {
+    if (this.personArray[6].present) {
+        this.personArray[6].addHumour(t_val, 10);
+        if (this.personArray[6].humours[3] > 110 && this.eventMap["poseidonPatientLvl1"].advance()) {
+            jhc.outputLine("Poseidon's patience seems never-ending.");
+            this.eventMap["poseidonPatientLvl2"].step();
+        }
+        else if (this.personArray[6].humours[3] > 135 && this.eventMap["poseidonPatientLvl2"].ready()) {
+            jhc.outputLine("Is Poseidon even paying attention?");
+            this.eventMap["poseidonPatientLvl2"].advance(); //don't want it repeating
         }
     }
 }

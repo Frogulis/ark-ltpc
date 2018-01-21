@@ -146,7 +146,6 @@ var game = (function() {
             }
             var addHumourFunc = function(humour, amount)
             {
-                console.log("Adding " + amount + " to " + humour);
                 var humourInt = this.humourToInt(humour);
                 
                 if (this.humours[humourInt] + amount > 150 || this.humours[humourInt] + amount < 0 || amount < 0) {
@@ -210,12 +209,12 @@ var game = (function() {
             colorM = this.getColorObject(0, 0, 255);
             colorP = this.getColorObject(0, 255, 0);
             this.personArray = [this.getPersonObject("Gaia",      50,     25,     50,     25),
-                                this.getPersonObject("Hermes",    25,     50,     25,     50),
+                                this.getPersonObject("Hermes",    25,      0,     25,    100),
                                 this.getPersonObject("Aphrodite",100,      0,     25,     25),
                                 this.getPersonObject("Ares",      25,    100,     25,      0),
-                                this.getPersonObject("Kronos",    25,     75,     25,     25),
+                                this.getPersonObject("Kronos",     0,     75,     25,     50),
                                 this.getPersonObject("Uranos",   100,     25,      0,     25),
-                                this.getPersonObject("Poseidon",  25,      0,     25,    100)];
+                                this.getPersonObject("Poseidon",   0,     50,    100,      0)];
             this.turnCounter = 0;
             this.initEvents();
             this.genBackground();
@@ -243,9 +242,14 @@ var game = (function() {
         
         runTest: function(text) {
             var cmds = text.split(" ");
-            jhc.outputLine("!> testing line: " + text);
             for (var i = 0; i < cmds.length; i++) {
                 this.gameInput(cmds[i]);
+            }
+        },
+        
+        runIterateTest: function(text, times) {
+            for (var i = 0; i < times; i++) {
+                this.runTest(text);
             }
         },
         
@@ -304,7 +308,6 @@ var game = (function() {
                     return "#ffffff";
                 }
                 else {
-                    console.log("Changing BG to: " + r + " " + g + " " + b);
                     return "#" + r.toString(16) + g.toString(16) + b.toString(16);
                 }
             });
@@ -375,7 +378,32 @@ var game = (function() {
             this.setBackground(Math.floor(bg.r), Math.floor(bg.g), Math.floor(bg.b));
         },
         
+        myTest: function() {
+            this.runTest("c");
+            this.eventMap["aresStormOut"].cur = 0;
+            this.personArray[6].present = false;
+            this.runTest("look");
+            this.eventMap["aresStormOut"].advance();
+            this.personArray[3].present = false;
+            this.runIterateTest("s", 12);
+            this.runTest("look");
+            this.eventMap["aresStormOut"].cur = 0;
+            this.eventMap["aresStormOut"].advance();
+            this.personArray[3].present = false;
+            this.runTest("look");
+            //this.personArray[5].present = false;
+            this.runIterateTest("s", 12);
+            this.runTest("look");
+        },
+        
         procTemperament: 0,
+        procReturns: 0,
+        procS: 0,
+        procC: 0,
+        procM: 0,
+        procP: 0,
+        addNotPresentArrayToPlayer: 0,
+        updateNotPresentArrayToPlayer: 0,
 
         procInput: function(t_input) {
             if (t_input[0] == "help") {
