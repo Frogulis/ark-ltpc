@@ -279,7 +279,7 @@ var game = (function() {
             if (missingArray.length > 1) {
                 var missing_names = "";
                 for (var i = 0; i < missingArray.length - 1; i++) {
-                    missing_names = missing_names + this.missingArray[i].name;
+                    missing_names = missing_names + missingArray[i].name;
                     if (missingArray.length > 2) {
                         missing_names = missing_names + ", ";
                     }
@@ -379,31 +379,23 @@ var game = (function() {
         },
         
         myTest: function() {
-            console.log(this.personArray[3].nparray);
-            this.personArray[6].present = false;
-            this.updateNotPresentArrayToPlayer(this.personArray[3]);
-            console.log(this.personArray[3].nparray);
-            this.personArray[5].present = false;
-            this.updateNotPresentArrayToPlayer(this.personArray[3]);
-            console.log(this.personArray[3].nparray);
-            this.personArray[3].present = false;
-            this.updateNotPresentArrayToPlayer(this.personArray[3]);
-            console.log(this.personArray[3].nparray);
-            /*this.runTest("c");
-            this.eventMap["aresStormOut"].cur = 0;
-            this.personArray[6].present = false;
             this.runTest("look");
+            this.processLeaveFor(this.personArray[5]);
+            this.eventMap["aresStormOut"].cur = 0;
             this.eventMap["aresStormOut"].advance();
-            this.personArray[3].present = false;
-            this.runIterateTest("s", 12);
+            this.processLeaveFor(this.personArray[3]);
+            for (var i = 0; i < 12; i++) {
+                this.procReturns("c");
+            }
             this.runTest("look");
             this.eventMap["aresStormOut"].cur = 0;
             this.eventMap["aresStormOut"].advance();
-            this.personArray[3].present = false;
+            this.processLeaveFor(this.personArray[3]);
+            this.processLeaveFor(this.personArray[4]);
+            for (var i = 0; i < 12; i++) {
+                this.procReturns("c");
+            }
             this.runTest("look");
-            //this.personArray[5].present = false;
-            this.runIterateTest("s", 12);
-            this.runTest("look");*/
         },
         
         procTemperament: 0,
@@ -412,8 +404,13 @@ var game = (function() {
         procC: 0,
         procM: 0,
         procP: 0,
-        addNotPresentArrayToPlayer: 0,
-        updateNotPresentArrayToPlayer: 0,
+        addNotPresentArrayToPerson: 0,
+        updateNotPresentArrayToPerson: 0,
+        
+        processLeaveFor: function(person) {
+            person.present = false;
+            this.updateNotPresentArrayToPerson(person);
+        },
 
         procInput: function(t_input) {
             if (t_input[0] == "help") {

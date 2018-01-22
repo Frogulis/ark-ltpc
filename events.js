@@ -76,20 +76,20 @@ game.procTemperament = function(t_val) {
     }
 }
 
-game.addNotPresentArrayToPlayer = function (player) {
+game.addNotPresentArrayToPerson = function (person) {
     var nparray = [];
     for (var i = 0; i < this.personArray.length; i++) {
-        if (this.personArray[i].name != player.name && !this.personArray[i].present) {
+        if (this.personArray[i].name != person.name && !this.personArray[i].present) {
             nparray += this.personArray[i].name;
         }
     }
     if (nparray != undefined)
-        player.nparray = nparray;
+        person.nparray = nparray;
 }
 
-game.updateNotPresentArrayToPlayer = function (player) {
-    if (player.nparray === undefined) {
-        this.addNotPresentArrayToPlayer(player);
+game.updateNotPresentArrayToPerson = function (person) {
+    if (person.nparray === undefined) {
+        this.addNotPresentArrayToPerson(person);
         return;
     }
     function remove(array, element) {
@@ -100,7 +100,7 @@ game.updateNotPresentArrayToPlayer = function (player) {
         }
     }
     var to_remove = [];
-    for (var i = 0; i < player.nparray.length; i++) {
+    for (var i = 0; i < person.nparray.length; i++) {
         for (var j = 0; j < this.personArray.length; j++) {
             if (this.personArray[j].present) { //if the character has reappeared since
                 to_remove.push(i); //avoid changing length of array til were done
@@ -108,36 +108,34 @@ game.updateNotPresentArrayToPlayer = function (player) {
         }
     }
     to_remove.forEach(function(el) {
-        remove(player.nparray, el);
+        remove(person.nparray, el);
     });
     this.personArray.forEach(function(el) {
-        if (!player.nparray.includes(el.name) && !el.present && el.name != player.name)  {
-            player.nparray += el.name;
+        if (!person.nparray.includes(el.name) && !el.present && el.name != person.name)  {
+            person.nparray += el.name;
         }
     });
 }
 
 game.procReturns = function(t_val) {
-    function aresLeavesForever() {//if ares returns to the table and somebody is newly missing, he leaves forever
-        var newly_missing = 0;
-        for (var i = 0; i < this.personArray.length; i++) {
-            if (i != 3 && !this.personArray[i].present) {
-                if (i in this.personArray[3].left_array) {
-                    continue;
-                }
-                newly_missing++;
-            }
-        }
-        if (newly_missing == 0) return; //nobody new has left
-        jhc.outputLine("Ares looks around and notices the missing " + newly_missing > 1 ? "seats" : "seat" + 
-                       ". He walks away.");
-        ares.present = false;
-    }
-    
     if (this.eventMap["aresStormOut"].waitAdvance()) { //this will trigger when the wait ends and no other time
         this.personArray[3].present = true;
         jhc.outputLine("Ares returns to the table with a sheepish look.");
-        aresLeavesForever();
+        var newly_missing = 0;
+        for (var i = 0; i < this.personArray.length; i++) {
+            if (i != 3 && !this.personArray[i].present) {
+                if (this.personArray[3].nparray.includes(this.personArray[i].name)) {
+                    continue;
+                }
+                else {
+                    newly_missing++;
+                }
+            }
+        }
+        if (newly_missing == 0) return; //nobody new has left
+        jhc.outputLine("Ares looks around and notices the newly empty " + (newly_missing > 1 ? "seats" : "seat") +
+                       ". He walks away.");
+        this.processLeaveFor(this.personArray[3]);
     }
     
 }
@@ -164,7 +162,7 @@ game.procC = function(t_val) {
         if (this.personArray[3].humours[1] > 120 && //ares high chol
                  this.personArray[2].humours[0] < 30 && //aphro low sang
                  this.eventMap["aresStormOut"].ready()) {
-            this.personArray[3].present = false;
+            this.processLeaveFor(this.personArray[3]);
             jhc.outputLine("Ares stands up, his hands balled into tight fists\
                             and a look of rage and frustration on his face. He storms out\
                             loudly.");
