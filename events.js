@@ -80,10 +80,41 @@ game.addNotPresentArrayToPlayer = function (player) {
     var nparray = [];
     for (var i = 0; i < this.personArray.length; i++) {
         if (this.personArray[i].name != player.name && !this.personArray[i].present) {
-            nparray += i;
+            nparray += this.personArray[i].name;
         }
     }
-    player.nparray = nparray;
+    if (nparray != undefined)
+        player.nparray = nparray;
+}
+
+game.updateNotPresentArrayToPlayer = function (player) {
+    if (player.nparray === undefined) {
+        this.addNotPresentArrayToPlayer(player);
+        return;
+    }
+    function remove(array, element) {
+        const index = array.indexOf(element);
+        
+        if (index !== -1) {
+            array.splice(index, 1);
+        }
+    }
+    var to_remove = [];
+    for (var i = 0; i < player.nparray.length; i++) {
+        for (var j = 0; j < this.personArray.length; j++) {
+            if (this.personArray[j].present) { //if the character has reappeared since
+                to_remove.push(i); //avoid changing length of array til were done
+            }
+        }
+    }
+    to_remove.forEach(function(el) {
+        remove(player.nparray, el);
+    });
+    this.personArray.forEach(function(el) {
+        if (!player.nparray.includes(el.name) && !el.present && el.name != player.name)  {
+            player.nparray += el.name;
+        }
+    });
 }
 
 game.procReturns = function() {

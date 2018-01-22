@@ -379,7 +379,17 @@ var game = (function() {
         },
         
         myTest: function() {
-            this.runTest("c");
+            console.log(this.personArray[3].nparray);
+            this.personArray[6].present = false;
+            this.updateNotPresentArrayToPlayer(this.personArray[3]);
+            console.log(this.personArray[3].nparray);
+            this.personArray[5].present = false;
+            this.updateNotPresentArrayToPlayer(this.personArray[3]);
+            console.log(this.personArray[3].nparray);
+            this.personArray[3].present = false;
+            this.updateNotPresentArrayToPlayer(this.personArray[3]);
+            console.log(this.personArray[3].nparray);
+            /*this.runTest("c");
             this.eventMap["aresStormOut"].cur = 0;
             this.personArray[6].present = false;
             this.runTest("look");
@@ -393,7 +403,7 @@ var game = (function() {
             this.runTest("look");
             //this.personArray[5].present = false;
             this.runIterateTest("s", 12);
-            this.runTest("look");
+            this.runTest("look");*/
         },
         
         procTemperament: 0,
