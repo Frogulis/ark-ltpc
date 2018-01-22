@@ -107,7 +107,7 @@ var game = (function() {
                 wait_max: options.wait_time,
                 waiting_status: false,
                 run_once: options.run_once,
-                has_run: false                
+                has_run: false
             }
         },
     

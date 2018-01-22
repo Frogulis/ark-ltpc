@@ -27,7 +27,7 @@ game.procTemperament = function(t_val) {
         }
     }
     
-      
+    this.procReturns(t_val);
     
     //general stuff
     if (this.eventMap["kronosTick"].advance() && this.personArray[4].present) {
@@ -55,16 +55,16 @@ game.procTemperament = function(t_val) {
     
     //specific character interactions below
     if (t_val == "s") {    
-        this.procS;
+        this.procS(t_val);
     }
     else if (t_val == "c") {
-        this.procC;
+        this.procC(t_val);
     }
     else if (t_val == "m") {
-        this.procM;
+        this.procM(t_val);
     }
     else if (t_val == "p") {
-        this.procP;
+        this.procP(t_val);
     }
     console.log("Turn " + this.turnCounter);
     for (var i = 0; i < this.personArray.length; i++) {
@@ -117,8 +117,7 @@ game.updateNotPresentArrayToPlayer = function (player) {
     });
 }
 
-game.procReturns = function() {
-    
+game.procReturns = function(t_val) {
     function aresLeavesForever() {//if ares returns to the table and somebody is newly missing, he leaves forever
         var newly_missing = 0;
         for (var i = 0; i < this.personArray.length; i++) {
@@ -143,7 +142,7 @@ game.procReturns = function() {
     
 }
 
-game.procS = function() {
+game.procS = function(t_val) {
     if (this.personArray[5].present) {
         if (this.personArray[5].humours[3] > 120) {
             if (this.eventMap["uranosCoolLvl1"].advance()) {
@@ -153,7 +152,7 @@ game.procS = function() {
     }
 }
 
-game.procC = function() {
+game.procC = function(t_val) {
     if (this.personArray[3].present) {
         this.personArray[3].addHumour(t_val, 10);
         if (this.personArray[3].humours[1] > 110) {
@@ -174,11 +173,11 @@ game.procC = function() {
     }
 }
 
-game.procM = function() {
+game.procM = function(t_val) {
     
 }
 
-game.procP = function() {
+game.procP = function(t_val) {
     if (this.personArray[6].present) {
         this.personArray[6].addHumour(t_val, 10);
         if (this.personArray[6].humours[3] > 110 && this.eventMap["poseidonPatientLvl1"].advance()) {
