@@ -5,6 +5,7 @@ game.initEvents = function() {
         "aresMadLvl1": this.getEventRecord(5),
         "poseidonPatientLvl1": this.getEventRecord(4),
         "poseidonPatientLvl2": this.getEventRecord(4),
+        "poseidonDespairLvl1": this.getEventRecord(5),
         "kronosTick": this.getEventRecord(5),
         "playDice": this.getEventRecord(10),
         //ares storyline
@@ -21,8 +22,8 @@ game.procTemperament = function(t_val) {
     
     //if the updated humour goes over 127, everyone starts to feel it\
     //removing because it's OP
-    /*var averageHumours = this.getAverageHumours();
-    if (averageHumours[this.personArray[0].humourToInt(t_val)] > 127) { 
+    var averageHumours = this.getAverageHumours();
+    /*if (averageHumours[this.personArray[0].humourToInt(t_val)] > 127) { 
         for (i = 1; i < this.personArray.length; i++) {
             this.personArray[i].addHumour(t_val, 5);
         }
@@ -173,7 +174,13 @@ game.procC = function(t_val) {
 }
 
 game.procM = function(t_val) {
-    
+    console.log("!!");
+    if (this.personArray[6].present) {
+        var first_run = !this.eventMap["poseidonDespairLvl1"].has_run;
+        if (this.eventMap["poseidonDespairLvl1"].advance()) {
+            jhc.outputLine("Poseidon sighs. " + (first_run ? "Presumably he has a plan and this is not it." : ""));
+        }
+    }
 }
 
 game.procP = function(t_val) {
