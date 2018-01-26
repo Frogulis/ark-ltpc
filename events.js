@@ -19,13 +19,14 @@ game.procTemperament = function(t_val) {
     this.turnCounter++;
     this.addUniformHumours(t_val, 10);
     
-    //if the updated humour goes over 127, everyone starts to feel it
-    var averageHumours = this.getAverageHumours();
+    //if the updated humour goes over 127, everyone starts to feel it\
+    //removing because it's OP
+    /*var averageHumours = this.getAverageHumours();
     if (averageHumours[this.personArray[0].humourToInt(t_val)] > 127) { 
         for (i = 1; i < this.personArray.length; i++) {
             this.personArray[i].addHumour(t_val, 5);
         }
-    }
+    }*/
     
     this.procReturns(t_val);
     
