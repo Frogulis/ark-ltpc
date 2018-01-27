@@ -5,15 +5,19 @@ game.initEvents = function() {
         "aresMadLvl1": this.getEventRecord(5),
         "poseidonPatientLvl1": this.getEventRecord(4),
         "poseidonPatientLvl2": this.getEventRecord(4),
-        "poseidonDespairLvl1": this.getEventRecord(5),
         "kronosTick": this.getEventRecord(5),
         "playDice": this.getEventRecord(10),
         //ares storyline
         "aresStormOut": this.getEventRecord(4, {is_waiter: true, wait_time: 10, starting_count: 4}),
         "aresAphroditeLoveLvl1": this.getEventRecord(1, {run_once: true}),
         "aresAphroditeLoveLvl2": this.getEventRecord(3, {run_once: true, starting_count: 3}),
-        "aresAphroditeLoveLvl3": this.getEventRecord(3, {is_waiter: true, wait_time: 10, starting_count: 3, run_once: true}) //leave room together
+        "aresAphroditeLoveLvl3": this.getEventRecord(3, {is_waiter: true, wait_time: 10, starting_count: 3, run_once: true}), //leave room together
+        //poseidon storyline
+        "poseidonDespairLvl1": this.getEventRecord(3),
+        "poseidonDespairLvl2": this.getEventRecord(3, {wait_time: 2}),
+        "poseidonPilotShip": this.getEventRecord(1)
     }
+    this.eventMap["poseidonDespairLvl2"].waitStart();
 }
 
 game.procTemperament = function(t_val) {
@@ -35,6 +39,8 @@ game.procTemperament = function(t_val) {
     if (this.eventMap["kronosTick"].advance() && this.personArray[4].present) {
         jhc.outputLine("Kronos adjusts his glasses.");
     }
+    
+    this.personArray[6].addHumour("m", 2); //poseidon will get more and more melancholic
     
     if (averageHumours[0] > 110) { //dice game, relaxes people but also raises choleric
         if (this.eventMap["playDice"].advance()) {
@@ -176,9 +182,21 @@ game.procC = function(t_val) {
 game.procM = function(t_val) {
     console.log("!!");
     if (this.personArray[6].present) {
-        var first_run = !this.eventMap["poseidonDespairLvl1"].has_run;
-        if (this.eventMap["poseidonDespairLvl1"].advance()) {
-            jhc.outputLine("Poseidon sighs. " + (first_run ? "Presumably he has a plan and this is not it." : ""));
+        var despair1_first_run = !this.eventMap["poseidonDespairLvl1"].has_run;
+        var despair2_first_run = !this.eventMap["poseidonDespairLvl2"].has_run;
+        if (this.eventMap["poseidonDespairLvl2"].waiting() &&
+            this.eventMap["poseidonDespairLvl1"].advance()) {
+            jhc.outputLine("Poseidon sighs. " + (despair1_first_run ? "Presumably he has a plan and this is not it." : ""));
+            this.eventMap["poseidonDespairLvl2"].waitAdvance();
+        }
+        else if (this.eventMap["poseidonDespairLvl2"].advance()) {
+            jhc.outputLine("Poseidon looks awfully tense. " + (despair2_first_run ? "You hope he doesn't try anything rash." : ""));
+        }
+        if (!this.eventMap["poseidonDespairLvl2"].waiting() &&
+            !this.personArray[4].present && this.personArray[6].humours[2] > 127) { //kronos is needed to prevent poseidon
+            jhc.outputLine("Poseidon gets to his feet and storms out the door towards the bridge. \
+                            Things happen FINISH THIS");
+            this.waitForReset();
         }
     }
 }

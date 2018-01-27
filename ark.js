@@ -8,6 +8,7 @@ var game = (function() {
     var missingArray = [];
     var eventMap;
     var turnCounter;
+    var waiting_for_reset;
     
     return { //start of "ark" module functions
         getEventRecord: function(myCount, options) {
@@ -56,10 +57,8 @@ var game = (function() {
                 return this.cur;
             }
             var waitStartFunc = function() { //starts the wait
-                if (this.is_waiter) {
-                    this.wait_cur = this.wait_max;
-                    this.waiting_status = true;
-                }
+                this.wait_cur = this.wait_max;
+                this.waiting_status = true;
             }
             var waitingFunc = function() { //returns whether its waiting
                 return this.waiting_status;
@@ -80,9 +79,7 @@ var game = (function() {
                 }
                 if (this.wait_cur == 0) {
                     this.wait_cur = this.wait_max;
-                    if (this.is_waiter) {
-                        this.waiting_status = false;
-                    }
+                    this.waiting_status = false;
                     return true;
                 }
                 else {
@@ -238,6 +235,14 @@ var game = (function() {
             
             this.procInput(input_line.toLowerCase().split(" "));
             this.genBackground();
+        },
+        
+        endGame: function() {
+            this.gameInit();
+        },
+        
+        waitForReset: function() {
+            this.waiting_for_reset = true;
         },
         
         runTest: function(text) {
@@ -413,6 +418,15 @@ var game = (function() {
         },
 
         procInput: function(t_input) {
+            if (this.waiting_for_reset) {
+                if (t_input[0] == "reset") {
+                    this.waiting_for_reset = false;
+                    this.endGame();
+                }
+                else {
+                    jhc.outputLine("Enter \"reset\" to begin the session again.");
+                }
+            }
             if (t_input[0] == "help") {
                 jhc.outputLine("You may express either (S)anguine, (C)holeric, (M)elancholic or (P)hlegmatic temperament. You may also (L)ook.");
             }
@@ -420,7 +434,7 @@ var game = (function() {
                 jhc.outputLine("Just close the browser tab!");
             }
             else if (t_input[0] == "reset") {
-                this.gameInit();
+                this.endGame();
             }
             else if (t_input[0] == "s" || t_input[0] == "sanguine") {
                 jhc.outputLine("You express your sanguine temperament.");
