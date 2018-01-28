@@ -38,7 +38,7 @@ a{
     font-family: courier, monospace;
     height: 90%;
     padding: 30px;
-    overflow: auto;
+    overflow-y: scroll;
     line-height: 30px;
     font-size: 1.0em;
 }
