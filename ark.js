@@ -306,7 +306,7 @@ var game = (function() {
         },
         
         setBackground: function(r, g, b) {
-            stringgen = (function(r, g, b,) {
+            stringgen = (function(r, g, b) {
                 if (r > 255 || g > 255 || b > 255 ||
                     r < 0 || g < 0 || b < 0) {
                     console.log("Invalid RGB values: " + r + " " + g + " " + b);
